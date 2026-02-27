@@ -1,0 +1,101 @@
+# ============================================================
+# terraform.tfvars.example
+# Copy to terraform.tfvars and fill in required values.
+# All values shown are the defaults — only override what you need.
+# ============================================================
+
+# ---- Required ----
+admin_username = "panadmin"
+admin_password = "CHANGE_ME_Use_A_Strong_Password!"
+
+# ---- Optional: Change regions ----
+# primary_region = {
+#   location    = "uksouth"
+#   code        = "uks"
+#   environment = "prod"
+# }
+#
+# secondary_region = {
+#   location    = "ukwest"
+#   code        = "ukw"
+#   environment = "dr"
+# }
+
+# ---- Optional: Override Hub VNet CIDRs ----
+# uks_hub_vnet = {
+#   address_space  = "10.10.0.0/16"
+#   subnet_azfw    = "10.10.0.0/24"
+#   subnet_trust   = "10.10.1.0/24"
+#   subnet_untrust = "10.10.2.0/24"
+#   subnet_mgmt    = "10.10.3.0/24"
+#   subnet_gateway = "10.10.255.0/27"
+# }
+#
+# ukw_hub_vnet = {
+#   address_space  = "10.20.0.0/16"
+#   subnet_trust   = "10.20.1.0/24"
+#   subnet_untrust = "10.20.2.0/24"
+#   subnet_mgmt    = "10.20.3.0/24"
+#   subnet_gateway = "10.20.255.0/27"
+# }
+
+# ---- Optional: Override Spoke VNets ----
+# uks_spokes = {
+#   app1 = {
+#     address_space   = "10.11.0.0/16"
+#     workload_subnet = "10.11.0.0/24"
+#   }
+#   app2 = {
+#     address_space   = "10.12.0.0/16"
+#     workload_subnet = "10.12.0.0/24"
+#   }
+# }
+#
+# ukw_spokes = {
+#   app1 = {
+#     address_space   = "10.21.0.0/16"
+#     workload_subnet = "10.21.0.0/24"
+#   }
+#   app2 = {
+#     address_space   = "10.22.0.0/16"
+#     workload_subnet = "10.22.0.0/24"
+#   }
+# }
+
+# ---- Optional: Override Firewall settings ----
+# firewall_vm_size = "Standard_D4s_v5"
+#
+# uks_firewall = {
+#   name       = "pa-uks-fw01"
+#   untrust_ip = "10.10.2.4"
+#   trust_ip   = "10.10.1.4"
+#   mgmt_ip    = "10.10.3.4"
+# }
+#
+# ukw_firewall = {
+#   name       = "pa-ukw-fw01"
+#   untrust_ip = "10.20.2.4"
+#   trust_ip   = "10.20.1.4"
+#   mgmt_ip    = "10.20.3.4"
+# }
+
+# ---- Optional: Internal LB frontend IPs ----
+# uks_internal_lb_frontend_ip = "10.10.1.100"
+# ukw_internal_lb_frontend_ip = "10.20.1.100"
+
+# ---- Optional: Management access CIDRs ----
+# mgmt_allowed_cidrs = ["10.0.0.0/8"]
+
+# ---- Optional: Additional tags ----
+# tags = {
+#   CostCentre = "Security"
+#   Owner      = "platform-team"
+# }
+
+# ---- Optional: PAN-OS image (BYOL default) ----
+# panos_image = {
+#   publisher = "paloaltonetworks"
+#   offer     = "vmseries-flex"
+#   sku       = "byol"
+#   version   = "latest"
+# }
