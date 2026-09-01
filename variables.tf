@@ -229,9 +229,21 @@ variable "enable_mgmt_public_ip" {
 }
 
 variable "mgmt_allowed_cidrs" {
-  description = "CIDRs permitted inbound access to the firewall management interface (SSH/HTTPS)"
+  description = "CIDRs permitted inbound access to the firewall management interface (SSH/HTTPS). Must be non-empty and must not include 0.0.0.0/0."
   type        = list(string)
   default     = ["10.0.0.0/8"] # Restrict further in production
+
+  # Owned by issue #11 (mgmt_allowed_cidrs validation) — kept separate from
+  # this repo's other generic variable-validation blocks.
+  validation {
+    condition     = length(var.mgmt_allowed_cidrs) > 0 && !contains(var.mgmt_allowed_cidrs, "0.0.0.0/0")
+    error_message = "mgmt_allowed_cidrs must be non-empty and must not include 0.0.0.0/0."
+  }
+
+  validation {
+    condition     = alltrue([for cidr in var.mgmt_allowed_cidrs : can(cidrhost(cidr, 0))])
+    error_message = "mgmt_allowed_cidrs must contain only valid CIDR blocks (e.g. \"10.0.0.0/8\")."
+  }
 }
 
 # ============================================================
