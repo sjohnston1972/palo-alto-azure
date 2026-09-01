@@ -222,6 +222,12 @@ variable "admin_ssh_public_key" {
 # Management Access
 # ============================================================
 
+variable "enable_mgmt_public_ip" {
+  description = "Whether to assign a public IP to the firewall management NICs. Defaults to false — management should be reached via VPN/Bastion/private connectivity unless explicitly opted in."
+  type        = bool
+  default     = false
+}
+
 variable "mgmt_allowed_cidrs" {
   description = "CIDRs permitted inbound access to the firewall management interface (SSH/HTTPS)"
   type        = list(string)

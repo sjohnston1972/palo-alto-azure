@@ -14,7 +14,10 @@
 # UK South - Public IPs
 # ============================================================
 
+# Opt-in only: var.enable_mgmt_public_ip defaults to false so management is
+# not exposed to the internet by default.
 resource "azurerm_public_ip" "uks_fw_mgmt" {
+  count               = var.enable_mgmt_public_ip ? 1 : 0
   name                = "pip-${var.uks_firewall.name}-mgmt"
   location            = var.primary_region.location
   resource_group_name = azurerm_resource_group.uks_paloalto.name
@@ -43,7 +46,7 @@ resource "azurerm_network_interface" "uks_fw_mgmt" {
     subnet_id                     = azurerm_subnet.uks_mgmt.id
     private_ip_address_allocation = "Static"
     private_ip_address            = var.uks_firewall.mgmt_ip
-    public_ip_address_id          = azurerm_public_ip.uks_fw_mgmt.id
+    public_ip_address_id          = var.enable_mgmt_public_ip ? azurerm_public_ip.uks_fw_mgmt[0].id : null
   }
 }
 
@@ -139,7 +142,10 @@ resource "azurerm_linux_virtual_machine" "uks_firewall" {
 # UK West - Public IPs
 # ============================================================
 
+# Opt-in only: var.enable_mgmt_public_ip defaults to false so management is
+# not exposed to the internet by default.
 resource "azurerm_public_ip" "ukw_fw_mgmt" {
+  count               = var.enable_mgmt_public_ip ? 1 : 0
   name                = "pip-${var.ukw_firewall.name}-mgmt"
   location            = var.secondary_region.location
   resource_group_name = azurerm_resource_group.ukw_paloalto.name
@@ -164,7 +170,7 @@ resource "azurerm_network_interface" "ukw_fw_mgmt" {
     subnet_id                     = azurerm_subnet.ukw_mgmt.id
     private_ip_address_allocation = "Static"
     private_ip_address            = var.ukw_firewall.mgmt_ip
-    public_ip_address_id          = azurerm_public_ip.ukw_fw_mgmt.id
+    public_ip_address_id          = var.enable_mgmt_public_ip ? azurerm_public_ip.ukw_fw_mgmt[0].id : null
   }
 }
 

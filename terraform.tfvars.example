@@ -86,6 +86,10 @@ admin_ssh_public_key = "ssh-rsa AAAAB3NzaC1yc2EA... CHANGE_ME"
 # ---- Optional: Management access CIDRs ----
 # mgmt_allowed_cidrs = ["10.0.0.0/8"]
 
+# ---- Optional: Firewall management public IP (default: disabled) ----
+# Enable only if management is not reachable via VPN/Bastion/private connectivity.
+# enable_mgmt_public_ip = true
+
 # ---- Optional: Additional tags ----
 # tags = {
 #   CostCentre = "Security"

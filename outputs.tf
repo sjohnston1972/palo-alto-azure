@@ -51,8 +51,8 @@ output "ukw_app2_vnet_id" {
 # ============================================================
 
 output "uks_firewall_mgmt_public_ip" {
-  description = "UKS Firewall management public IP"
-  value       = azurerm_public_ip.uks_fw_mgmt.ip_address
+  description = "UKS Firewall management public IP (null when enable_mgmt_public_ip is false)"
+  value       = try(azurerm_public_ip.uks_fw_mgmt[0].ip_address, null)
 }
 
 output "uks_firewall_mgmt_private_ip" {
@@ -71,8 +71,8 @@ output "uks_firewall_untrust_ip" {
 }
 
 output "ukw_firewall_mgmt_public_ip" {
-  description = "UKW Firewall management public IP"
-  value       = azurerm_public_ip.ukw_fw_mgmt.ip_address
+  description = "UKW Firewall management public IP (null when enable_mgmt_public_ip is false)"
+  value       = try(azurerm_public_ip.ukw_fw_mgmt[0].ip_address, null)
 }
 
 output "ukw_firewall_mgmt_private_ip" {
