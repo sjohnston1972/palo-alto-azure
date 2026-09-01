@@ -68,12 +68,29 @@ resource "azurerm_network_security_group" "uks_untrust" {
   resource_group_name = azurerm_resource_group.uks_hub.name
   tags                = local.uks_tags
 
-  # Allow all inbound — Palo Alto handles policy on this interface
+  # Scoped to what the public load balancer actually publishes (TCP 443 —
+  # see load_balancers.tf) rather than allowing all protocols/ports from the
+  # internet. Palo Alto still applies its own policy on top of this, but the
+  # NSG no longer relies solely on the appliance to reject unpublished
+  # traffic, and the Deny-All-Inbound fallback below gives NSG-level tooling
+  # something to alert on.
   security_rule {
-    name                       = "Allow-All-Inbound"
+    name                       = "Allow-HTTPS-Inbound"
     priority                   = 100
     direction                  = "Inbound"
     access                     = "Allow"
+    protocol                   = "Tcp"
+    source_port_range          = "*"
+    destination_port_range     = "443"
+    source_address_prefix      = "*"
+    destination_address_prefix = "*"
+  }
+
+  security_rule {
+    name                       = "Deny-All-Inbound"
+    priority                   = 4096
+    direction                  = "Inbound"
+    access                     = "Deny"
     protocol                   = "*"
     source_port_range          = "*"
     destination_port_range     = "*"
@@ -209,11 +226,29 @@ resource "azurerm_network_security_group" "ukw_untrust" {
   resource_group_name = azurerm_resource_group.ukw_hub.name
   tags                = local.ukw_tags
 
+  # Scoped to what the public load balancer actually publishes (TCP 443 —
+  # see load_balancers.tf) rather than allowing all protocols/ports from the
+  # internet. Palo Alto still applies its own policy on top of this, but the
+  # NSG no longer relies solely on the appliance to reject unpublished
+  # traffic, and the Deny-All-Inbound fallback below gives NSG-level tooling
+  # something to alert on.
   security_rule {
-    name                       = "Allow-All-Inbound"
+    name                       = "Allow-HTTPS-Inbound"
     priority                   = 100
     direction                  = "Inbound"
     access                     = "Allow"
+    protocol                   = "Tcp"
+    source_port_range          = "*"
+    destination_port_range     = "443"
+    source_address_prefix      = "*"
+    destination_address_prefix = "*"
+  }
+
+  security_rule {
+    name                       = "Deny-All-Inbound"
+    priority                   = 4096
+    direction                  = "Inbound"
+    access                     = "Deny"
     protocol                   = "*"
     source_port_range          = "*"
     destination_port_range     = "*"
