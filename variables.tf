@@ -146,7 +146,12 @@ variable "panos_image" {
     publisher = "paloaltonetworks"
     offer     = "vmseries-flex"
     sku       = "byol"
-    version   = "latest"
+    version   = "12.1.7"
+  }
+
+  validation {
+    condition     = lower(var.panos_image.version) != "latest"
+    error_message = "panos_image.version must be pinned to a concrete PAN-OS release (e.g. \"12.1.7\"); \"latest\" is not allowed because it causes plan drift and forced VM replacement. Run `az vm image list --publisher paloaltonetworks --offer vmseries-flex --sku byol --all -o table` to see available versions."
   }
 }
 

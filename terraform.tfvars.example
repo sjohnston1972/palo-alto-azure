@@ -93,9 +93,11 @@ admin_ssh_public_key = "ssh-rsa AAAAB3NzaC1yc2EA... CHANGE_ME"
 # }
 
 # ---- Optional: PAN-OS image (BYOL default) ----
+# Must be a concrete version — "latest" is rejected by validation.
+# List available versions: az vm image list --publisher paloaltonetworks --offer vmseries-flex --sku byol --all -o table
 # panos_image = {
 #   publisher = "paloaltonetworks"
 #   offer     = "vmseries-flex"
 #   sku       = "byol"
-#   version   = "latest"
+#   version   = "12.1.7"
 # }
