@@ -89,9 +89,13 @@ resource "azurerm_linux_virtual_machine" "uks_firewall" {
   resource_group_name             = azurerm_resource_group.uks_paloalto.name
   size                            = var.firewall_vm_size
   admin_username                  = var.admin_username
-  admin_password                  = var.admin_password
-  disable_password_authentication = false
+  disable_password_authentication = true
   allow_extension_operations      = false
+
+  admin_ssh_key {
+    username   = var.admin_username
+    public_key = var.admin_ssh_public_key
+  }
 
   # NIC order: mgmt first (primary), then dataplane NICs
   network_interface_ids = [
@@ -206,9 +210,13 @@ resource "azurerm_linux_virtual_machine" "ukw_firewall" {
   resource_group_name             = azurerm_resource_group.ukw_paloalto.name
   size                            = var.firewall_vm_size
   admin_username                  = var.admin_username
-  admin_password                  = var.admin_password
-  disable_password_authentication = false
+  disable_password_authentication = true
   allow_extension_operations      = false
+
+  admin_ssh_key {
+    username   = var.admin_username
+    public_key = var.admin_ssh_public_key
+  }
 
   network_interface_ids = [
     azurerm_network_interface.ukw_fw_mgmt.id,

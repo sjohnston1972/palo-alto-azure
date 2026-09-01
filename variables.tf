@@ -153,10 +153,10 @@ variable "panos_image" {
 variable "uks_firewall" {
   description = "UK South Palo Alto firewall NIC IP assignments"
   type = object({
-    name        = string
-    untrust_ip  = string
-    trust_ip    = string
-    mgmt_ip     = string
+    name       = string
+    untrust_ip = string
+    trust_ip   = string
+    mgmt_ip    = string
   })
   default = {
     name       = "pa-uks-fw01"
@@ -208,10 +208,9 @@ variable "admin_username" {
   default     = "panadmin"
 }
 
-variable "admin_password" {
-  description = "Local administrator password for Palo Alto VMs"
+variable "admin_ssh_public_key" {
+  description = "SSH public key for the local administrator account on the Palo Alto VMs (used instead of password authentication)"
   type        = string
-  sensitive   = true
 }
 
 # ============================================================

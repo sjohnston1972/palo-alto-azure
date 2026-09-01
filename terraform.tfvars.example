@@ -5,8 +5,8 @@
 # ============================================================
 
 # ---- Required ----
-admin_username = "panadmin"
-admin_password = "CHANGE_ME_Use_A_Strong_Password!"
+admin_username       = "panadmin"
+admin_ssh_public_key = "ssh-rsa AAAAB3NzaC1yc2EA... CHANGE_ME"
 
 # ---- Optional: Change regions ----
 # primary_region = {
