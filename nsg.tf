@@ -87,6 +87,58 @@ resource "azurerm_subnet_network_security_group_association" "uks_untrust" {
   network_security_group_id = azurerm_network_security_group.uks_untrust.id
 }
 
+resource "azurerm_network_security_group" "uks_trust" {
+  name                = local.uks_trust_nsg_name
+  location            = var.primary_region.location
+  resource_group_name = azurerm_resource_group.uks_hub.name
+  tags                = local.uks_tags
+
+  # East-west traffic from the UKS spoke VNets, forwarded to the firewall
+  # trust interface via the internal load balancer (HA Ports rule passes all
+  # protocols/ports, so source IPs remain the original spoke workload IPs).
+  security_rule {
+    name                       = "Allow-Spoke-Inbound"
+    priority                   = 100
+    direction                  = "Inbound"
+    access                     = "Allow"
+    protocol                   = "*"
+    source_port_range          = "*"
+    destination_port_range     = "*"
+    source_address_prefixes    = [var.uks_spokes.app1.address_space, var.uks_spokes.app2.address_space]
+    destination_address_prefix = "*"
+  }
+
+  # Azure Load Balancer health probe for the internal LB (probe-ssh, TCP 22).
+  security_rule {
+    name                       = "Allow-AzureLoadBalancer-Inbound"
+    priority                   = 110
+    direction                  = "Inbound"
+    access                     = "Allow"
+    protocol                   = "Tcp"
+    source_port_range          = "*"
+    destination_port_range     = "22"
+    source_address_prefix      = "AzureLoadBalancer"
+    destination_address_prefix = "*"
+  }
+
+  security_rule {
+    name                       = "Deny-All-Inbound"
+    priority                   = 4096
+    direction                  = "Inbound"
+    access                     = "Deny"
+    protocol                   = "*"
+    source_port_range          = "*"
+    destination_port_range     = "*"
+    source_address_prefix      = "*"
+    destination_address_prefix = "*"
+  }
+}
+
+resource "azurerm_subnet_network_security_group_association" "uks_trust" {
+  subnet_id                 = azurerm_subnet.uks_trust.id
+  network_security_group_id = azurerm_network_security_group.uks_trust.id
+}
+
 # ============================================================
 # UK West NSGs
 # ============================================================
@@ -173,4 +225,56 @@ resource "azurerm_network_security_group" "ukw_untrust" {
 resource "azurerm_subnet_network_security_group_association" "ukw_untrust" {
   subnet_id                 = azurerm_subnet.ukw_untrust.id
   network_security_group_id = azurerm_network_security_group.ukw_untrust.id
+}
+
+resource "azurerm_network_security_group" "ukw_trust" {
+  name                = local.ukw_trust_nsg_name
+  location            = var.secondary_region.location
+  resource_group_name = azurerm_resource_group.ukw_hub.name
+  tags                = local.ukw_tags
+
+  # East-west traffic from the UKW spoke VNets, forwarded to the firewall
+  # trust interface via the internal load balancer (HA Ports rule passes all
+  # protocols/ports, so source IPs remain the original spoke workload IPs).
+  security_rule {
+    name                       = "Allow-Spoke-Inbound"
+    priority                   = 100
+    direction                  = "Inbound"
+    access                     = "Allow"
+    protocol                   = "*"
+    source_port_range          = "*"
+    destination_port_range     = "*"
+    source_address_prefixes    = [var.ukw_spokes.app1.address_space, var.ukw_spokes.app2.address_space]
+    destination_address_prefix = "*"
+  }
+
+  # Azure Load Balancer health probe for the internal LB (probe-ssh, TCP 22).
+  security_rule {
+    name                       = "Allow-AzureLoadBalancer-Inbound"
+    priority                   = 110
+    direction                  = "Inbound"
+    access                     = "Allow"
+    protocol                   = "Tcp"
+    source_port_range          = "*"
+    destination_port_range     = "22"
+    source_address_prefix      = "AzureLoadBalancer"
+    destination_address_prefix = "*"
+  }
+
+  security_rule {
+    name                       = "Deny-All-Inbound"
+    priority                   = 4096
+    direction                  = "Inbound"
+    access                     = "Deny"
+    protocol                   = "*"
+    source_port_range          = "*"
+    destination_port_range     = "*"
+    source_address_prefix      = "*"
+    destination_address_prefix = "*"
+  }
+}
+
+resource "azurerm_subnet_network_security_group_association" "ukw_trust" {
+  subnet_id                 = azurerm_subnet.ukw_trust.id
+  network_security_group_id = azurerm_network_security_group.ukw_trust.id
 }

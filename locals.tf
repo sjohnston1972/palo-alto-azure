@@ -42,8 +42,10 @@ locals {
   # ---- NSG Names ----
   uks_mgmt_nsg_name    = "nsg-${var.primary_region.code}-palo-mgmt"
   uks_untrust_nsg_name = "nsg-${var.primary_region.code}-palo-untrust"
+  uks_trust_nsg_name   = "nsg-${var.primary_region.code}-palo-trust"
   ukw_mgmt_nsg_name    = "nsg-${var.secondary_region.code}-palo-mgmt"
   ukw_untrust_nsg_name = "nsg-${var.secondary_region.code}-palo-untrust"
+  ukw_trust_nsg_name   = "nsg-${var.secondary_region.code}-palo-trust"
 
   # ---- Common Tags ----
   # Region-specific resources must use uks_tags / ukw_tags so DR (UK West)
