@@ -7,6 +7,12 @@ terraform {
       version = "~> 3.0"
     }
   }
+
+  # Remote state backend (Azure Storage), configured via partial
+  # configuration. No account keys, SAS tokens, or subscription IDs are
+  # hardcoded here — concrete values are supplied at `terraform init` time
+  # via a gitignored backend.hcl file (see docs/backend.md).
+  backend "azurerm" {}
 }
 
 provider "azurerm" {
