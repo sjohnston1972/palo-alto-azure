@@ -278,3 +278,158 @@ resource "azurerm_subnet_network_security_group_association" "ukw_trust" {
   subnet_id                 = azurerm_subnet.ukw_trust.id
   network_security_group_id = azurerm_network_security_group.ukw_trust.id
 }
+
+# ============================================================
+# UK South Spoke Workload NSGs
+# Default-deny inbound; the VirtualNetwork tag also covers traffic
+# returning from the peered hub (e.g. the firewall trust interface)
+# since Azure's VirtualNetwork service tag includes peered VNets.
+# ============================================================
+
+resource "azurerm_network_security_group" "uks_app1_workload" {
+  name                = local.uks_app1_workload_nsg_name
+  location            = var.primary_region.location
+  resource_group_name = azurerm_resource_group.uks_spoke_app1.name
+  tags                = local.uks_tags
+
+  security_rule {
+    name                       = "Allow-VirtualNetwork-Inbound"
+    priority                   = 100
+    direction                  = "Inbound"
+    access                     = "Allow"
+    protocol                   = "*"
+    source_port_range          = "*"
+    destination_port_range     = "*"
+    source_address_prefix      = "VirtualNetwork"
+    destination_address_prefix = "*"
+  }
+
+  security_rule {
+    name                       = "Deny-All-Inbound"
+    priority                   = 4096
+    direction                  = "Inbound"
+    access                     = "Deny"
+    protocol                   = "*"
+    source_port_range          = "*"
+    destination_port_range     = "*"
+    source_address_prefix      = "*"
+    destination_address_prefix = "*"
+  }
+}
+
+resource "azurerm_subnet_network_security_group_association" "uks_app1_workload" {
+  subnet_id                 = azurerm_subnet.uks_app1_workload.id
+  network_security_group_id = azurerm_network_security_group.uks_app1_workload.id
+}
+
+resource "azurerm_network_security_group" "uks_app2_workload" {
+  name                = local.uks_app2_workload_nsg_name
+  location            = var.primary_region.location
+  resource_group_name = azurerm_resource_group.uks_spoke_app2.name
+  tags                = local.uks_tags
+
+  security_rule {
+    name                       = "Allow-VirtualNetwork-Inbound"
+    priority                   = 100
+    direction                  = "Inbound"
+    access                     = "Allow"
+    protocol                   = "*"
+    source_port_range          = "*"
+    destination_port_range     = "*"
+    source_address_prefix      = "VirtualNetwork"
+    destination_address_prefix = "*"
+  }
+
+  security_rule {
+    name                       = "Deny-All-Inbound"
+    priority                   = 4096
+    direction                  = "Inbound"
+    access                     = "Deny"
+    protocol                   = "*"
+    source_port_range          = "*"
+    destination_port_range     = "*"
+    source_address_prefix      = "*"
+    destination_address_prefix = "*"
+  }
+}
+
+resource "azurerm_subnet_network_security_group_association" "uks_app2_workload" {
+  subnet_id                 = azurerm_subnet.uks_app2_workload.id
+  network_security_group_id = azurerm_network_security_group.uks_app2_workload.id
+}
+
+# ============================================================
+# UK West Spoke Workload NSGs
+# ============================================================
+
+resource "azurerm_network_security_group" "ukw_app1_workload" {
+  name                = local.ukw_app1_workload_nsg_name
+  location            = var.secondary_region.location
+  resource_group_name = azurerm_resource_group.ukw_spoke_app1.name
+  tags                = local.ukw_tags
+
+  security_rule {
+    name                       = "Allow-VirtualNetwork-Inbound"
+    priority                   = 100
+    direction                  = "Inbound"
+    access                     = "Allow"
+    protocol                   = "*"
+    source_port_range          = "*"
+    destination_port_range     = "*"
+    source_address_prefix      = "VirtualNetwork"
+    destination_address_prefix = "*"
+  }
+
+  security_rule {
+    name                       = "Deny-All-Inbound"
+    priority                   = 4096
+    direction                  = "Inbound"
+    access                     = "Deny"
+    protocol                   = "*"
+    source_port_range          = "*"
+    destination_port_range     = "*"
+    source_address_prefix      = "*"
+    destination_address_prefix = "*"
+  }
+}
+
+resource "azurerm_subnet_network_security_group_association" "ukw_app1_workload" {
+  subnet_id                 = azurerm_subnet.ukw_app1_workload.id
+  network_security_group_id = azurerm_network_security_group.ukw_app1_workload.id
+}
+
+resource "azurerm_network_security_group" "ukw_app2_workload" {
+  name                = local.ukw_app2_workload_nsg_name
+  location            = var.secondary_region.location
+  resource_group_name = azurerm_resource_group.ukw_spoke_app2.name
+  tags                = local.ukw_tags
+
+  security_rule {
+    name                       = "Allow-VirtualNetwork-Inbound"
+    priority                   = 100
+    direction                  = "Inbound"
+    access                     = "Allow"
+    protocol                   = "*"
+    source_port_range          = "*"
+    destination_port_range     = "*"
+    source_address_prefix      = "VirtualNetwork"
+    destination_address_prefix = "*"
+  }
+
+  security_rule {
+    name                       = "Deny-All-Inbound"
+    priority                   = 4096
+    direction                  = "Inbound"
+    access                     = "Deny"
+    protocol                   = "*"
+    source_port_range          = "*"
+    destination_port_range     = "*"
+    source_address_prefix      = "*"
+    destination_address_prefix = "*"
+  }
+}
+
+resource "azurerm_subnet_network_security_group_association" "ukw_app2_workload" {
+  subnet_id                 = azurerm_subnet.ukw_app2_workload.id
+  network_security_group_id = azurerm_network_security_group.ukw_app2_workload.id
+}

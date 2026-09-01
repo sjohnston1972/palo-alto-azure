@@ -47,6 +47,11 @@ locals {
   ukw_untrust_nsg_name = "nsg-${var.secondary_region.code}-palo-untrust"
   ukw_trust_nsg_name   = "nsg-${var.secondary_region.code}-palo-trust"
 
+  uks_app1_workload_nsg_name = "nsg-${var.primary_region.code}-app1-workload"
+  uks_app2_workload_nsg_name = "nsg-${var.primary_region.code}-app2-workload"
+  ukw_app1_workload_nsg_name = "nsg-${var.secondary_region.code}-app1-workload"
+  ukw_app2_workload_nsg_name = "nsg-${var.secondary_region.code}-app2-workload"
+
   # ---- Common Tags ----
   # Region-specific resources must use uks_tags / ukw_tags so DR (UK West)
   # resources are tagged with the secondary region's environment (e.g. "dr")
