@@ -9,7 +9,7 @@ resource "azurerm_public_ip" "uks_lb_public" {
   resource_group_name = azurerm_resource_group.uks_paloalto.name
   allocation_method   = "Static"
   sku                 = "Standard"
-  tags                = local.common_tags
+  tags                = local.uks_tags
 }
 
 resource "azurerm_lb" "uks_public" {
@@ -17,7 +17,7 @@ resource "azurerm_lb" "uks_public" {
   location            = var.primary_region.location
   resource_group_name = azurerm_resource_group.uks_paloalto.name
   sku                 = "Standard"
-  tags                = local.common_tags
+  tags                = local.uks_tags
 
   frontend_ip_configuration {
     name                 = "frontend-public"
@@ -69,7 +69,7 @@ resource "azurerm_lb" "uks_internal" {
   location            = var.primary_region.location
   resource_group_name = azurerm_resource_group.uks_paloalto.name
   sku                 = "Standard"
-  tags                = local.common_tags
+  tags                = local.uks_tags
 
   frontend_ip_configuration {
     name                          = "frontend-internal"
@@ -121,7 +121,7 @@ resource "azurerm_public_ip" "ukw_lb_public" {
   resource_group_name = azurerm_resource_group.ukw_paloalto.name
   allocation_method   = "Static"
   sku                 = "Standard"
-  tags                = local.common_tags
+  tags                = local.ukw_tags
 }
 
 resource "azurerm_lb" "ukw_public" {
@@ -129,7 +129,7 @@ resource "azurerm_lb" "ukw_public" {
   location            = var.secondary_region.location
   resource_group_name = azurerm_resource_group.ukw_paloalto.name
   sku                 = "Standard"
-  tags                = local.common_tags
+  tags                = local.ukw_tags
 
   frontend_ip_configuration {
     name                 = "frontend-public"
@@ -177,7 +177,7 @@ resource "azurerm_lb" "ukw_internal" {
   location            = var.secondary_region.location
   resource_group_name = azurerm_resource_group.ukw_paloalto.name
   sku                 = "Standard"
-  tags                = local.common_tags
+  tags                = local.ukw_tags
 
   frontend_ip_configuration {
     name                          = "frontend-internal"

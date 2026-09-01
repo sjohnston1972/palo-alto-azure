@@ -6,7 +6,7 @@ resource "azurerm_network_security_group" "uks_mgmt" {
   name                = local.uks_mgmt_nsg_name
   location            = var.primary_region.location
   resource_group_name = azurerm_resource_group.uks_hub.name
-  tags                = local.common_tags
+  tags                = local.uks_tags
 
   security_rule {
     name                       = "Allow-HTTPS-Inbound"
@@ -66,7 +66,7 @@ resource "azurerm_network_security_group" "uks_untrust" {
   name                = local.uks_untrust_nsg_name
   location            = var.primary_region.location
   resource_group_name = azurerm_resource_group.uks_hub.name
-  tags                = local.common_tags
+  tags                = local.uks_tags
 
   # Allow all inbound — Palo Alto handles policy on this interface
   security_rule {
@@ -95,7 +95,7 @@ resource "azurerm_network_security_group" "ukw_mgmt" {
   name                = local.ukw_mgmt_nsg_name
   location            = var.secondary_region.location
   resource_group_name = azurerm_resource_group.ukw_hub.name
-  tags                = local.common_tags
+  tags                = local.ukw_tags
 
   security_rule {
     name                       = "Allow-HTTPS-Inbound"
@@ -155,7 +155,7 @@ resource "azurerm_network_security_group" "ukw_untrust" {
   name                = local.ukw_untrust_nsg_name
   location            = var.secondary_region.location
   resource_group_name = azurerm_resource_group.ukw_hub.name
-  tags                = local.common_tags
+  tags                = local.ukw_tags
 
   security_rule {
     name                       = "Allow-All-Inbound"

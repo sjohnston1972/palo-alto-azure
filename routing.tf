@@ -8,7 +8,7 @@ resource "azurerm_route_table" "uks_spokes" {
   location                      = var.primary_region.location
   resource_group_name           = azurerm_resource_group.uks_hub.name
   disable_bgp_route_propagation = true
-  tags                          = local.common_tags
+  tags                          = local.uks_tags
 
   route {
     name                   = "default-to-firewall"
@@ -38,7 +38,7 @@ resource "azurerm_route_table" "ukw_spokes" {
   location                      = var.secondary_region.location
   resource_group_name           = azurerm_resource_group.ukw_hub.name
   disable_bgp_route_propagation = true
-  tags                          = local.common_tags
+  tags                          = local.ukw_tags
 
   route {
     name                   = "default-to-firewall"

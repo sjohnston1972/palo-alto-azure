@@ -46,11 +46,23 @@ locals {
   ukw_untrust_nsg_name = "nsg-${var.secondary_region.code}-palo-untrust"
 
   # ---- Common Tags ----
-  common_tags = merge(
+  # Region-specific resources must use uks_tags / ukw_tags so DR (UK West)
+  # resources are tagged with the secondary region's environment (e.g. "dr")
+  # instead of inheriting the primary region's environment (e.g. "prod").
+  uks_tags = merge(
     {
       ManagedBy   = "Terraform"
       Project     = "PaloAlto-DualRegion"
       Environment = var.primary_region.environment
+    },
+    var.tags
+  )
+
+  ukw_tags = merge(
+    {
+      ManagedBy   = "Terraform"
+      Project     = "PaloAlto-DualRegion"
+      Environment = var.secondary_region.environment
     },
     var.tags
   )

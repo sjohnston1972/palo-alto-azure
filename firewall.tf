@@ -20,7 +20,7 @@ resource "azurerm_public_ip" "uks_fw_mgmt" {
   resource_group_name = azurerm_resource_group.uks_paloalto.name
   allocation_method   = "Static"
   sku                 = "Standard"
-  tags                = local.common_tags
+  tags                = local.uks_tags
 }
 
 # ============================================================
@@ -36,7 +36,7 @@ resource "azurerm_network_interface" "uks_fw_mgmt" {
   location                      = var.primary_region.location
   resource_group_name           = azurerm_resource_group.uks_paloalto.name
   enable_accelerated_networking = false
-  tags                          = local.common_tags
+  tags                          = local.uks_tags
 
   ip_configuration {
     name                          = "ipconfig-mgmt"
@@ -53,7 +53,7 @@ resource "azurerm_network_interface" "uks_fw_untrust" {
   resource_group_name           = azurerm_resource_group.uks_paloalto.name
   enable_accelerated_networking = true
   enable_ip_forwarding          = true
-  tags                          = local.common_tags
+  tags                          = local.uks_tags
 
   ip_configuration {
     name                          = "ipconfig-untrust"
@@ -69,7 +69,7 @@ resource "azurerm_network_interface" "uks_fw_trust" {
   resource_group_name           = azurerm_resource_group.uks_paloalto.name
   enable_accelerated_networking = true
   enable_ip_forwarding          = true
-  tags                          = local.common_tags
+  tags                          = local.uks_tags
 
   ip_configuration {
     name                          = "ipconfig-trust"
@@ -126,7 +126,7 @@ resource "azurerm_linux_virtual_machine" "uks_firewall" {
 
   boot_diagnostics {}
 
-  tags = local.common_tags
+  tags = local.uks_tags
 
   depends_on = [
     azurerm_network_interface.uks_fw_mgmt,
@@ -145,7 +145,7 @@ resource "azurerm_public_ip" "ukw_fw_mgmt" {
   resource_group_name = azurerm_resource_group.ukw_paloalto.name
   allocation_method   = "Static"
   sku                 = "Standard"
-  tags                = local.common_tags
+  tags                = local.ukw_tags
 }
 
 # ============================================================
@@ -157,7 +157,7 @@ resource "azurerm_network_interface" "ukw_fw_mgmt" {
   location                      = var.secondary_region.location
   resource_group_name           = azurerm_resource_group.ukw_paloalto.name
   enable_accelerated_networking = false
-  tags                          = local.common_tags
+  tags                          = local.ukw_tags
 
   ip_configuration {
     name                          = "ipconfig-mgmt"
@@ -174,7 +174,7 @@ resource "azurerm_network_interface" "ukw_fw_untrust" {
   resource_group_name           = azurerm_resource_group.ukw_paloalto.name
   enable_accelerated_networking = true
   enable_ip_forwarding          = true
-  tags                          = local.common_tags
+  tags                          = local.ukw_tags
 
   ip_configuration {
     name                          = "ipconfig-untrust"
@@ -190,7 +190,7 @@ resource "azurerm_network_interface" "ukw_fw_trust" {
   resource_group_name           = azurerm_resource_group.ukw_paloalto.name
   enable_accelerated_networking = true
   enable_ip_forwarding          = true
-  tags                          = local.common_tags
+  tags                          = local.ukw_tags
 
   ip_configuration {
     name                          = "ipconfig-trust"
@@ -246,7 +246,7 @@ resource "azurerm_linux_virtual_machine" "ukw_firewall" {
 
   boot_diagnostics {}
 
-  tags = local.common_tags
+  tags = local.ukw_tags
 
   depends_on = [
     azurerm_network_interface.ukw_fw_mgmt,

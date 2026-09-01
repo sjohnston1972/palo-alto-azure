@@ -7,7 +7,7 @@ resource "azurerm_virtual_network" "uks_hub" {
   location            = var.primary_region.location
   resource_group_name = azurerm_resource_group.uks_hub.name
   address_space       = [var.uks_hub_vnet.address_space]
-  tags                = local.common_tags
+  tags                = local.uks_tags
 }
 
 resource "azurerm_subnet" "uks_azfw" {
@@ -54,7 +54,7 @@ resource "azurerm_virtual_network" "uks_app1" {
   location            = var.primary_region.location
   resource_group_name = azurerm_resource_group.uks_spoke_app1.name
   address_space       = [var.uks_spokes.app1.address_space]
-  tags                = local.common_tags
+  tags                = local.uks_tags
 }
 
 resource "azurerm_subnet" "uks_app1_workload" {
@@ -69,7 +69,7 @@ resource "azurerm_virtual_network" "uks_app2" {
   location            = var.primary_region.location
   resource_group_name = azurerm_resource_group.uks_spoke_app2.name
   address_space       = [var.uks_spokes.app2.address_space]
-  tags                = local.common_tags
+  tags                = local.uks_tags
 }
 
 resource "azurerm_subnet" "uks_app2_workload" {
@@ -88,7 +88,7 @@ resource "azurerm_virtual_network" "ukw_hub" {
   location            = var.secondary_region.location
   resource_group_name = azurerm_resource_group.ukw_hub.name
   address_space       = [var.ukw_hub_vnet.address_space]
-  tags                = local.common_tags
+  tags                = local.ukw_tags
 }
 
 resource "azurerm_subnet" "ukw_trust" {
@@ -128,7 +128,7 @@ resource "azurerm_virtual_network" "ukw_app1" {
   location            = var.secondary_region.location
   resource_group_name = azurerm_resource_group.ukw_spoke_app1.name
   address_space       = [var.ukw_spokes.app1.address_space]
-  tags                = local.common_tags
+  tags                = local.ukw_tags
 }
 
 resource "azurerm_subnet" "ukw_app1_workload" {
@@ -143,7 +143,7 @@ resource "azurerm_virtual_network" "ukw_app2" {
   location            = var.secondary_region.location
   resource_group_name = azurerm_resource_group.ukw_spoke_app2.name
   address_space       = [var.ukw_spokes.app2.address_space]
-  tags                = local.common_tags
+  tags                = local.ukw_tags
 }
 
 resource "azurerm_subnet" "ukw_app2_workload" {

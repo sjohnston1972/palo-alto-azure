@@ -8,7 +8,7 @@ resource "azurerm_log_analytics_workspace" "uks" {
   resource_group_name = azurerm_resource_group.uks_hub.name
   sku                 = "PerGB2018"
   retention_in_days   = 90
-  tags                = local.common_tags
+  tags                = local.uks_tags
 }
 
 # ============================================================
@@ -21,7 +21,7 @@ resource "azurerm_log_analytics_workspace" "ukw" {
   resource_group_name = azurerm_resource_group.ukw_hub.name
   sku                 = "PerGB2018"
   retention_in_days   = 90
-  tags                = local.common_tags
+  tags                = local.ukw_tags
 }
 
 # ============================================================
