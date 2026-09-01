@@ -14,6 +14,11 @@ variable "primary_region" {
     code        = "uks"
     environment = "prod"
   }
+
+  validation {
+    condition     = can(regex("^[a-z0-9]{1,10}$", var.primary_region.code)) && can(regex("^[a-z0-9]{1,10}$", var.primary_region.environment)) && length(var.primary_region.location) > 0
+    error_message = "primary_region.code and primary_region.environment must be non-empty, lowercase alphanumeric strings of 1-10 characters (they are used verbatim in resource naming), and primary_region.location must not be empty."
+  }
 }
 
 variable "secondary_region" {
@@ -27,6 +32,11 @@ variable "secondary_region" {
     location    = "ukwest"
     code        = "ukw"
     environment = "dr"
+  }
+
+  validation {
+    condition     = can(regex("^[a-z0-9]{1,10}$", var.secondary_region.code)) && can(regex("^[a-z0-9]{1,10}$", var.secondary_region.environment)) && length(var.secondary_region.location) > 0
+    error_message = "secondary_region.code and secondary_region.environment must be non-empty, lowercase alphanumeric strings of 1-10 characters (they are used verbatim in resource naming), and secondary_region.location must not be empty."
   }
 }
 
@@ -52,6 +62,18 @@ variable "uks_hub_vnet" {
     subnet_mgmt    = "10.10.3.0/24"
     subnet_gateway = "10.10.255.0/27"
   }
+
+  validation {
+    condition = alltrue([
+      can(cidrhost(var.uks_hub_vnet.address_space, 0)),
+      can(cidrhost(var.uks_hub_vnet.subnet_azfw, 0)),
+      can(cidrhost(var.uks_hub_vnet.subnet_trust, 0)),
+      can(cidrhost(var.uks_hub_vnet.subnet_untrust, 0)),
+      can(cidrhost(var.uks_hub_vnet.subnet_mgmt, 0)),
+      can(cidrhost(var.uks_hub_vnet.subnet_gateway, 0)),
+    ])
+    error_message = "All uks_hub_vnet fields (address_space, subnet_azfw, subnet_trust, subnet_untrust, subnet_mgmt, subnet_gateway) must be valid CIDR blocks, e.g. \"10.10.0.0/24\"."
+  }
 }
 
 variable "ukw_hub_vnet" {
@@ -69,6 +91,17 @@ variable "ukw_hub_vnet" {
     subnet_untrust = "10.20.2.0/24"
     subnet_mgmt    = "10.20.3.0/24"
     subnet_gateway = "10.20.255.0/27"
+  }
+
+  validation {
+    condition = alltrue([
+      can(cidrhost(var.ukw_hub_vnet.address_space, 0)),
+      can(cidrhost(var.ukw_hub_vnet.subnet_trust, 0)),
+      can(cidrhost(var.ukw_hub_vnet.subnet_untrust, 0)),
+      can(cidrhost(var.ukw_hub_vnet.subnet_mgmt, 0)),
+      can(cidrhost(var.ukw_hub_vnet.subnet_gateway, 0)),
+    ])
+    error_message = "All ukw_hub_vnet fields (address_space, subnet_trust, subnet_untrust, subnet_mgmt, subnet_gateway) must be valid CIDR blocks, e.g. \"10.20.0.0/24\"."
   }
 }
 
@@ -98,6 +131,16 @@ variable "uks_spokes" {
       workload_subnet = "10.12.0.0/24"
     }
   }
+
+  validation {
+    condition = alltrue([
+      can(cidrhost(var.uks_spokes.app1.address_space, 0)),
+      can(cidrhost(var.uks_spokes.app1.workload_subnet, 0)),
+      can(cidrhost(var.uks_spokes.app2.address_space, 0)),
+      can(cidrhost(var.uks_spokes.app2.workload_subnet, 0)),
+    ])
+    error_message = "All uks_spokes address_space and workload_subnet fields must be valid CIDR blocks, e.g. \"10.11.0.0/24\"."
+  }
 }
 
 variable "ukw_spokes" {
@@ -121,6 +164,16 @@ variable "ukw_spokes" {
       address_space   = "10.22.0.0/16"
       workload_subnet = "10.22.0.0/24"
     }
+  }
+
+  validation {
+    condition = alltrue([
+      can(cidrhost(var.ukw_spokes.app1.address_space, 0)),
+      can(cidrhost(var.ukw_spokes.app1.workload_subnet, 0)),
+      can(cidrhost(var.ukw_spokes.app2.address_space, 0)),
+      can(cidrhost(var.ukw_spokes.app2.workload_subnet, 0)),
+    ])
+    error_message = "All ukw_spokes address_space and workload_subnet fields must be valid CIDR blocks, e.g. \"10.21.0.0/24\"."
   }
 }
 
@@ -169,6 +222,15 @@ variable "uks_firewall" {
     trust_ip   = "10.10.1.4"
     mgmt_ip    = "10.10.3.4"
   }
+
+  validation {
+    condition = length(var.uks_firewall.name) > 0 && alltrue([
+      can(cidrhost("${var.uks_firewall.untrust_ip}/32", 0)),
+      can(cidrhost("${var.uks_firewall.trust_ip}/32", 0)),
+      can(cidrhost("${var.uks_firewall.mgmt_ip}/32", 0)),
+    ])
+    error_message = "uks_firewall.name must be non-empty, and untrust_ip, trust_ip, mgmt_ip must each be a valid IPv4 address, e.g. \"10.10.1.4\"."
+  }
 }
 
 variable "ukw_firewall" {
@@ -185,6 +247,15 @@ variable "ukw_firewall" {
     trust_ip   = "10.20.1.4"
     mgmt_ip    = "10.20.3.4"
   }
+
+  validation {
+    condition = length(var.ukw_firewall.name) > 0 && alltrue([
+      can(cidrhost("${var.ukw_firewall.untrust_ip}/32", 0)),
+      can(cidrhost("${var.ukw_firewall.trust_ip}/32", 0)),
+      can(cidrhost("${var.ukw_firewall.mgmt_ip}/32", 0)),
+    ])
+    error_message = "ukw_firewall.name must be non-empty, and untrust_ip, trust_ip, mgmt_ip must each be a valid IPv4 address, e.g. \"10.20.1.4\"."
+  }
 }
 
 # ============================================================
@@ -195,12 +266,22 @@ variable "uks_internal_lb_frontend_ip" {
   description = "Static private IP for UKS internal load balancer frontend (in trust subnet)"
   type        = string
   default     = "10.10.1.100"
+
+  validation {
+    condition     = can(cidrhost("${var.uks_internal_lb_frontend_ip}/32", 0))
+    error_message = "uks_internal_lb_frontend_ip must be a valid IPv4 address, e.g. \"10.10.1.100\"."
+  }
 }
 
 variable "ukw_internal_lb_frontend_ip" {
   description = "Static private IP for UKW internal load balancer frontend (in trust subnet)"
   type        = string
   default     = "10.20.1.100"
+
+  validation {
+    condition     = can(cidrhost("${var.ukw_internal_lb_frontend_ip}/32", 0))
+    error_message = "ukw_internal_lb_frontend_ip must be a valid IPv4 address, e.g. \"10.20.1.100\"."
+  }
 }
 
 # ============================================================
@@ -211,11 +292,21 @@ variable "admin_username" {
   description = "Local administrator username for Palo Alto VMs"
   type        = string
   default     = "panadmin"
+
+  validation {
+    condition     = can(regex("^[a-z][-a-z0-9_]{2,31}$", var.admin_username))
+    error_message = "admin_username must be 3-32 characters, start with a lowercase letter, and contain only lowercase letters, digits, hyphens, or underscores."
+  }
 }
 
 variable "admin_ssh_public_key" {
   description = "SSH public key for the local administrator account on the Palo Alto VMs (used instead of password authentication)"
   type        = string
+
+  validation {
+    condition     = can(regex("^(ssh-rsa|ssh-ed25519|ecdsa-sha2-nistp256|ecdsa-sha2-nistp384|ecdsa-sha2-nistp521) [A-Za-z0-9+/]+=*(\\s.*)?$", var.admin_ssh_public_key))
+    error_message = "admin_ssh_public_key must be a valid SSH public key in authorized_keys format, e.g. \"ssh-ed25519 AAAAC3Nza... comment\"."
+  }
 }
 
 # ============================================================
